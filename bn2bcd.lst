@@ -1,0 +1,91 @@
+Z80ASM SuperFast Relocating Macro Assembler     	    Z80ASM 1.32 Page   1
+BN2BCD  Z80
+
+    1                   ;
+    2                   ;
+    3                   ;
+    4                   ;
+    5                   ;		Title		Binary to BCD conversion
+    6                   ;		Name:		BN2BCD
+    7                   ;
+    8                   ;
+    9                   ;		Purpose:	Convert one byte of binary data to two
+   10                   ;				bytes of BCD data
+   11                   ;
+   12                   ;		Entry:		Register A = binary data
+   13                   ;
+   14                   ;		Exit:		Register H = High byte of BCD data
+   15                   ;				Register L = Low byte of BCD data
+   16                   ;
+   17                   ;		Registers used:	AF,C,HL
+   18                   ;
+   19                   ;		Time:		497 cycles maximum
+   20                   ;
+   21                   ;		Size:		Program 27 bytes
+   22                   ;
+   23                   ;
+   24                   
+   25 0100              BN2BCD:
+   26                   	;CALCULATE 100'S DIGIT - DIVIDE BY 100
+   27                   	; H = QUOTIENT
+   28                   	; A = REMAINDER
+   29 0100  26 FF       	LD	H,0FFH		;START QUOTIENT AT -1
+   30 0102              D100LP:
+   31 0102  24          	INC	H		;ADD 1 TO QUOTIENT
+   32 0103  D6 64       	SUB	100		;SUBTRACT 100
+   33 0105  30 FB       	JR	NC,D100LP	;JUMP IF DIFFERENCE STILL POSITIVE
+   34 0107  C6 64       	ADD	A,100		;ADD THE LAST 100 BACK
+   35                   	
+   36                   	;CALCULATE 10'S AND 1'S DIGITS
+   37                   	;  DIVIDE REMAINDER OF THE 100'S DIGIT BY 10
+   38                   	; L = 10'S DIGIT
+   39                   	; A = 1'S DIGIT
+   40 0109  2E FF       	LD	L,0FFH		;START QUOTIENT AT -1
+   41 010B              D10LP:
+   42 010B  2C          	INC	L		;ADD 1 TO QUOTIENT
+   43 010C  D6 0A       	SUB	10		;SUBTRACT 10
+   44 010E  30 FB       	JR	NC,D10LP	;JUMP IF DIFFERENCE STILL POSITIVE
+   45 0110  C6 0A       	ADD	A,10		;ADD THE LAST 10 BACK
+   46                   	
+   47                   	; COMBINE 1'S AND 10'S DIGITS
+   48 0112  4F          	LD	C,A		;SAVE 1'S DIGIT IN C
+   49 0113  7D          	LD	A,L
+   50 0114  07          	RLCA			;MOVE 10'S TO HIGH NIBBLE OF A
+   51 0115  07          	RLCA
+   52 0116  07          	RLCA
+   53 0117  07          	RLCA
+   54 0118  B1          	OR	C		;OR IN THE 1'S DIGIT
+   55                   	
+   56                   	; RETURN WITH L = LOW BYTE, H = HIGH BYTE
+   57 0119  6F          	LD	L,A
+   58 011A  C9          	RET
+Z80ASM SuperFast Relocating Macro Assembler     	    Z80ASM 1.32 Page   2
+BN2BCD  Z80
+
+   59                   	
+   60                   ;
+   61                   ;
+   62                   ;	SAMPLE EXECUTION:
+   63                   ;
+   64                   ;
+   65                   
+   66 011B              SC4A:
+   67                   	;CONVERT OA HEXADECIMAL TO 10 BCD
+   68 011B  3E 0A       	LD	A,0AH
+   69 011D  CD 0100     	CALL	BN2BCD		;H = 0, L = 10H
+   70                   	
+   71                   	;CONVERT FF HEXADECIMAL TO 255 BCD
+   72 0120  3E FF       	LD	A,0FFH
+   73 0122  CD 0100     	CALL	BN2BCD		;H = 02H, L = 55H
+   74                   	
+   75                   	;CONVERT 0 HEXADECIMAL TO 0 BCD
+   76 0125  3E 00       	LD	A,0
+   77 0127  CD 0100     	CALL 	BN2BCD		;H = 0, L = 0
+   78                   	
+   79 012A  18 EF       	JR	SC4A
+   80                   	
+ 0 Error(s) Detected.
+ 44 Absolute Bytes. 4 Symbols Detected.
+D	L,A
+   58 011A  C9          	RET
+Z80ASM SuperFast Relocating Macr
