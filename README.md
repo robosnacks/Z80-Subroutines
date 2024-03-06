@@ -1,13 +1,13 @@
-# Z80-Subroutines
+# Z80 Assmebly Language Subroutines
 
 [Z80 Assembly Language Subroutines by Lance A. Leventhal and Winthrop Saville][booklink]
 
 [booklink]: https://archive.org/details/z80-assembly-language-subroutines
 
 ## Code Conversion
-4A Binary to BCD Conversion 167
-4B BCD to Binary Conversion 170
-4C Binary to Hexadecimal ASCII Conversion 172
+4A Binary to BCD Conversion 167\
+4B BCD to Binary Conversion 170\
+4C Binary to Hexadecimal ASCII Conversion 172\
 4D Hexadecimal ASCII to Binary Conversion 175
 4E Conversion of a Binary Number to Decimal ASCII 178
 4F Conversion of ASCII Decimal to Binary 183
